@@ -43,6 +43,14 @@ echo "########################################################################"
 tput sgr0
 echo
 
+# Remove picom-git (conflicts with picom or not needed)
+if pacman -Qi picom-git &>/dev/null; then
+    tput setaf 3
+    echo "Removing picom-git..."
+    tput sgr0
+    sudo pacman -Rns --noconfirm picom-git
+fi
+
 # Copy .config files from zythros-personal
 if [ -d "$installed_dir/zythros-personal/.config" ]; then
     cp -rv "$installed_dir/zythros-personal/.config/"* "$HOME/.config/"
