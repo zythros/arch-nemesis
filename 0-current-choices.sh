@@ -335,9 +335,6 @@ sh 500-plasma*
 # installation of Chadwm
 sh 600-chadwm*
 
-# zythros personal dotfiles and chadwm rebuild
-sh 800-zythros-dotfiles*
-
 echo
 tput setaf 3
 echo "########################################################################"
@@ -379,6 +376,10 @@ sh 970-arch.sh
 sh 990-skel*
 
 sh 999-last*
+
+# zythros personal dotfiles and chadwm rebuild (must run AFTER all Personal scripts)
+cd $installed_dir
+sh 800-zythros-dotfiles*
 
 tput setaf 3
 echo "########################################################################"
