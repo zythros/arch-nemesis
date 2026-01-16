@@ -80,10 +80,10 @@ echo "########################################################################"
 tput sgr0
 echo
 
-if ! pacman -Qi opera &>/dev/null; then
-    yay -S opera --noconfirm
+if ! pacman -Qi mullvad-browser &>/dev/null; then
+    yay -S mullvad-browser-bin --noconfirm
 else
-    echo "Opera is already installed."
+    echo "Mullvad browser is already installed."
 fi
 
 # if ! pacman -Qi opera-ffmpeg-codecs-bin &>/dev/null; then
