@@ -34,7 +34,7 @@ run xrandr --output Virtual-1 --primary --mode 2560x1080 --pos 0x0 --rotate norm
 run "nm-applet"
 #run "pamac-tray"
 #run "protonvpn-app"
-run "variety"
+#run "variety"  # disabled - using wallpaper.sh instead
 run "flameshot"
 run "xfce4-power-manager"
 run "xfce4-clipman"
