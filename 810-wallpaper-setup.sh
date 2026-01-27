@@ -67,30 +67,38 @@ else
 fi
 
 ##################################################################################################################################
-# Create wallpapers directory
+# Clone or update wallpaper repository
 ##################################################################################################################################
 
 WALLPAPER_DIR="$HOME/.local/share/wallpapers"
+WALLPAPER_REPO="https://github.com/zythros/wallpaper.git"
 
-if [ ! -d "$WALLPAPER_DIR" ]; then
-    mkdir -p "$WALLPAPER_DIR"
-    tput setaf 2
-    echo "Created wallpapers directory at $WALLPAPER_DIR"
+if [ -d "$WALLPAPER_DIR/.git" ]; then
+    # Already a git repo - pull latest
+    tput setaf 3
+    echo "Updating wallpaper repository..."
     tput sgr0
+    cd "$WALLPAPER_DIR"
+    git pull
+elif [ -d "$WALLPAPER_DIR" ] && [ "$(ls -A "$WALLPAPER_DIR" 2>/dev/null)" ]; then
+    # Directory exists with files but not a git repo - backup and clone
+    tput setaf 3
+    echo "Backing up existing wallpapers and cloning repository..."
+    tput sgr0
+    mv "$WALLPAPER_DIR" "${WALLPAPER_DIR}.backup.$(date +%s)"
+    git clone "$WALLPAPER_REPO" "$WALLPAPER_DIR"
+else
+    # Fresh install - clone
+    tput setaf 3
+    echo "Cloning wallpaper repository..."
+    tput sgr0
+    mkdir -p "$(dirname "$WALLPAPER_DIR")"
+    git clone "$WALLPAPER_REPO" "$WALLPAPER_DIR"
 fi
 
-##################################################################################################################################
-# Copy default wallpapers if available
-##################################################################################################################################
-
-DEFAULT_WALLPAPERS="$installed_dir/zythros-personal/.local/share/wallpapers"
-
-if [ -d "$DEFAULT_WALLPAPERS" ] && [ "$(ls -A "$DEFAULT_WALLPAPERS" 2>/dev/null)" ]; then
-    cp -v "$DEFAULT_WALLPAPERS"/* "$WALLPAPER_DIR/" 2>/dev/null
-    tput setaf 2
-    echo "Copied default wallpapers to $WALLPAPER_DIR"
-    tput sgr0
-fi
+tput setaf 2
+echo "Wallpapers installed at $WALLPAPER_DIR"
+tput sgr0
 
 ##################################################################################################################################
 # Check PATH
