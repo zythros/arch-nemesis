@@ -101,6 +101,57 @@ echo "Wallpapers installed at $WALLPAPER_DIR"
 tput sgr0
 
 ##################################################################################################################################
+# Update run.sh to use wallpaper.sh restore on startup
+##################################################################################################################################
+
+RUN_SH="$HOME/.config/arco-chadwm/scripts/run.sh"
+WALLPAPER_LINE='~/.local/bin/wallpaper.sh restore &'
+
+if [ -f "$RUN_SH" ]; then
+    # Check if wallpaper.sh restore is already in run.sh
+    if grep -q "wallpaper.sh restore" "$RUN_SH"; then
+        tput setaf 2
+        echo "run.sh already configured for wallpaper.sh"
+        tput sgr0
+    else
+        # Backup run.sh
+        cp "$RUN_SH" "${RUN_SH}.bak.$(date +%s)"
+
+        # Check if there's a feh --bg-fill line to replace
+        if grep -q "^feh --bg-fill" "$RUN_SH"; then
+            # Replace the feh line with wallpaper.sh restore
+            sed -i "s|^feh --bg-fill.*|$WALLPAPER_LINE|" "$RUN_SH"
+            tput setaf 2
+            echo "Updated run.sh: replaced feh line with wallpaper.sh restore"
+            tput sgr0
+        elif grep -q "^#feh --bg-fill" "$RUN_SH"; then
+            # There's a commented feh line - add wallpaper.sh after it
+            sed -i "/^#feh --bg-fill.*chadwm.jpg/a $WALLPAPER_LINE" "$RUN_SH"
+            tput setaf 2
+            echo "Updated run.sh: added wallpaper.sh restore after commented feh line"
+            tput sgr0
+        else
+            # No feh line found - add before slstatus section
+            if grep -q "pkill -x slstatus" "$RUN_SH"; then
+                sed -i "/pkill -x slstatus/i $WALLPAPER_LINE" "$RUN_SH"
+            else
+                # Fallback: append before the last line
+                sed -i "/^while type chadwm/i $WALLPAPER_LINE" "$RUN_SH"
+            fi
+            tput setaf 2
+            echo "Updated run.sh: added wallpaper.sh restore"
+            tput sgr0
+        fi
+    fi
+else
+    tput setaf 3
+    echo "WARNING: run.sh not found at $RUN_SH"
+    echo "You may need to manually add this line to your startup script:"
+    echo "  $WALLPAPER_LINE"
+    tput sgr0
+fi
+
+##################################################################################################################################
 # Check PATH
 ##################################################################################################################################
 
