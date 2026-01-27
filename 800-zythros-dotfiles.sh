@@ -67,23 +67,9 @@ if [ -d "$installed_dir/zythros-personal/.config" ]; then
     tput sgr0
 fi
 
-# Copy .local files (wallpaper.sh)
-if [ -d "$installed_dir/zythros-personal/.local" ]; then
-    mkdir -p "$HOME/.local/bin"
-    cp -rv "$installed_dir/zythros-personal/.local/"* "$HOME/.local/"
-    chmod +x "$HOME/.local/bin/"*
-    tput setaf 2
-    echo "Copied zythros-personal .local files to ~/.local/"
-    tput sgr0
-fi
-
-# Create wallpapers directory if not exists
-if [ ! -d "$HOME/.local/share/wallpapers" ]; then
-    mkdir -p "$HOME/.local/share/wallpapers"
-    tput setaf 2
-    echo "Created wallpapers directory at ~/.local/share/wallpapers/"
-    echo "Add your wallpaper images there for MOD+w / MOD+Shift+w cycling"
-    tput sgr0
+# Set up wallpaper system (calls separate script)
+if [ -f "$installed_dir/810-wallpaper-setup.sh" ]; then
+    bash "$installed_dir/810-wallpaper-setup.sh"
 fi
 
 ##################################################################################################################################
