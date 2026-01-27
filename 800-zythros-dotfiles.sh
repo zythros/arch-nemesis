@@ -2,7 +2,7 @@
 #set -e
 ##################################################################################################################################
 # Author    : zythros
-# Purpose   : Apply personal dotfiles and rebuild chadwm
+# Purpose   : Apply personal dotfiles, install suckless tools, and rebuild chadwm
 ##################################################################################################################################
 #
 #   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
@@ -51,6 +51,14 @@ if pacman -Qi picom-git &>/dev/null; then
     sudo pacman -Rns --noconfirm picom-git
 fi
 
+# Remove system dmenu (we'll use zythros fork)
+if [ -f /usr/bin/dmenu ]; then
+    tput setaf 3
+    echo "Removing system dmenu (will be replaced with zythros fork)..."
+    tput sgr0
+    sudo rm -f /usr/bin/dmenu /usr/bin/dmenu_run /usr/bin/dmenu_path
+fi
+
 # Copy .config files from zythros-personal
 if [ -d "$installed_dir/zythros-personal/.config" ]; then
     cp -rv "$installed_dir/zythros-personal/.config/"* "$HOME/.config/"
@@ -59,7 +67,81 @@ if [ -d "$installed_dir/zythros-personal/.config" ]; then
     tput sgr0
 fi
 
-# Rebuild chadwm if config was updated
+# Copy .local files (wallpaper.sh)
+if [ -d "$installed_dir/zythros-personal/.local" ]; then
+    mkdir -p "$HOME/.local/bin"
+    cp -rv "$installed_dir/zythros-personal/.local/"* "$HOME/.local/"
+    chmod +x "$HOME/.local/bin/"*
+    tput setaf 2
+    echo "Copied zythros-personal .local files to ~/.local/"
+    tput sgr0
+fi
+
+# Create wallpapers directory if not exists
+if [ ! -d "$HOME/.local/share/wallpapers" ]; then
+    mkdir -p "$HOME/.local/share/wallpapers"
+    tput setaf 2
+    echo "Created wallpapers directory at ~/.local/share/wallpapers/"
+    echo "Add your wallpaper images there for MOD+w / MOD+Shift+w cycling"
+    tput sgr0
+fi
+
+##################################################################################################################################
+# Install dmenu (zythros fork with center, grid, border patches)
+##################################################################################################################################
+
+echo
+tput setaf 3
+echo "########################################################################"
+echo "################### Installing dmenu (zythros fork)"
+echo "########################################################################"
+tput sgr0
+echo
+
+DMENU_DIR="$HOME/.config/arco-chadwm/dmenu"
+DMENU_REPO="https://github.com/zythros/dmenu.git"
+
+if [ ! -d "$DMENU_DIR" ]; then
+    git clone "$DMENU_REPO" "$DMENU_DIR"
+fi
+
+cd "$DMENU_DIR"
+sudo make clean install
+
+tput setaf 2
+echo "dmenu installed from zythros fork"
+tput sgr0
+
+##################################################################################################################################
+# Install slstatus (zythros fork)
+##################################################################################################################################
+
+echo
+tput setaf 3
+echo "########################################################################"
+echo "################### Installing slstatus (zythros fork)"
+echo "########################################################################"
+tput sgr0
+echo
+
+SLSTATUS_DIR="$HOME/.config/arco-chadwm/slstatus"
+SLSTATUS_REPO="https://github.com/zythros/slstatus.git"
+
+if [ ! -d "$SLSTATUS_DIR" ]; then
+    git clone "$SLSTATUS_REPO" "$SLSTATUS_DIR"
+fi
+
+cd "$SLSTATUS_DIR"
+sudo make clean install
+
+tput setaf 2
+echo "slstatus installed from zythros fork"
+tput sgr0
+
+##################################################################################################################################
+# Rebuild chadwm with personal config
+##################################################################################################################################
+
 if [ -f "$HOME/.config/arco-chadwm/chadwm/config.def.h" ]; then
     echo
     tput setaf 3
@@ -82,10 +164,31 @@ if [ -f "$HOME/.config/arco-chadwm/chadwm/config.def.h" ]; then
     tput sgr0
 fi
 
+##################################################################################################################################
+# Summary
+##################################################################################################################################
+
 echo
 tput setaf 6
 echo "##############################################################"
 echo "###################  $(basename $0) done"
 echo "##############################################################"
+echo
+echo "Installed components:"
+echo "  - chadwm (personal config with dwm-rev1 style tags)"
+echo "  - dmenu (zythros fork: center, grid, border patches)"
+echo "  - slstatus (zythros fork)"
+echo "  - wallpaper.sh (MOD+w / MOD+Shift+w)"
+echo "  - sxhkd keybinds"
+echo "  - alacritty config (fish shell)"
+echo
+echo "Key bindings:"
+echo "  MOD + d         : dmenu"
+echo "  MOD + Space     : Show keybinds"
+echo "  MOD + s         : Screenshot (flameshot)"
+echo "  MOD + w         : Next wallpaper"
+echo "  MOD + Shift + w : Previous wallpaper"
+echo "  MOD + Return    : Alacritty (fish)"
+echo
 tput sgr0
 echo

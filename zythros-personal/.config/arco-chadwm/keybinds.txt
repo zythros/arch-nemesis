@@ -1,0 +1,153 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                     CHADWM KEYBINDINGS                            ║
+║                        MOD = Super                                ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────────┐
+│  WINDOW MANAGEMENT                                                │
+└───────────────────────────────────────────────────────────────────┘
+  MOD + j/k             Focus window down/up in stack
+  MOD + Shift + j/k     Move window down/up in stack
+  MOD + h/l             Decrease/increase master width
+  MOD + Shift + h/l     Decrease/increase client height
+  MOD + Shift + o       Reset client height
+  MOD + q               Kill focused window
+  MOD + f               Toggle fullscreen
+  MOD + Shift + Space   Toggle floating
+  MOD + Tab             View previous tag
+  MOD + 0               View all tags
+  MOD + Shift + 0       Tag window to all tags
+  MOD + 1-9             Switch to tag 1-9
+  MOD + Shift + 1-9     Move window to tag 1-9
+  MOD + Ctrl + 1-9      Toggle view tag
+  MOD + Left/Right      Shift view to prev/next tag
+  MOD + Shift + Left/Right  Move window to prev/next monitor
+  MOD + , / .           Focus prev/next monitor
+  MOD + i               Increase master count
+  MOD + n               Decrease master count
+
+┌───────────────────────────────────────────────────────────────────┐
+│  LAYOUTS                                                          │
+└───────────────────────────────────────────────────────────────────┘
+  MOD + Ctrl + F1       Tile []=
+  MOD + Ctrl + F2       Spiral [@]
+  MOD + Ctrl + F3       Bstack TTT
+  MOD + Ctrl + F4       Bstack Horiz ===
+  MOD + Ctrl + F5       Grid HHH
+  MOD + Ctrl + F6       Centered Master |M|
+  MOD + Ctrl + p/m      Cycle layout prev/next
+
+┌───────────────────────────────────────────────────────────────────┐
+│  GAPS & BORDERS                                                   │
+└───────────────────────────────────────────────────────────────────┘
+  MOD + Ctrl + t        Toggle gaps
+  MOD + Ctrl + i/d      Increase/decrease all gaps
+  MOD + Ctrl + Shift + d  Reset gaps to default
+  MOD + Shift + i       Increase inner gaps
+  MOD + Ctrl + Shift + i  Decrease inner gaps
+  MOD + Ctrl + o        Increase outer gaps
+  MOD + Ctrl + Shift + o  Decrease outer gaps
+  MOD + Shift + minus   Decrease border width
+  MOD + Shift + p       Increase border width
+
+┌───────────────────────────────────────────────────────────────────┐
+│  BAR & TABS                                                       │
+└───────────────────────────────────────────────────────────────────┘
+  MOD + Shift + b       Toggle bar
+  MOD + Ctrl + w        Toggle tab mode
+
+┌───────────────────────────────────────────────────────────────────┐
+│  SESSION                                                          │
+└───────────────────────────────────────────────────────────────────┘
+  MOD + Shift + r       Restart chadwm
+  MOD + Ctrl + Shift + Return  Zoom (swap with master)
+
+┌───────────────────────────────────────────────────────────────────┐
+│  SCREENSHOTS (chadwm)                                             │
+└───────────────────────────────────────────────────────────────────┘
+  MOD + u               Screenshot selection (maim)
+  MOD + Ctrl + u        Screenshot fullscreen (maim)
+
+╔═══════════════════════════════════════════════════════════════════╗
+║                   APPLICATION LAUNCHERS (sxhkd)                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────────┐
+│  ESSENTIALS                                                       │
+└───────────────────────────────────────────────────────────────────┘
+  MOD + Return          Alacritty terminal
+  MOD + Shift + Return  Thunar file manager
+  MOD + d               dmenu (app launcher)
+  MOD + Space           Show this keybinds file
+  MOD + x               Logout menu
+  MOD + Escape          xkill
+
+┌───────────────────────────────────────────────────────────────────┐
+│  BROWSERS                                                         │
+└───────────────────────────────────────────────────────────────────┘
+  MOD + b               Brave
+  MOD + m               Mullvad Browser
+  MOD + F1              Vivaldi
+
+┌───────────────────────────────────────────────────────────────────┐
+│  APPLICATIONS                                                     │
+└───────────────────────────────────────────────────────────────────┘
+  MOD + v               Pavucontrol (audio)
+  MOD + t               st terminal
+  MOD + e               Atom editor
+  MOD + c               Conky toggle
+  MOD + r               Rofi theme selector
+  MOD + F1              Vivaldi
+  MOD + F2              VS Code
+  MOD + F3              Inkscape
+  MOD + F4              GIMP
+  MOD + F5              Meld
+  MOD + F6              VLC
+  MOD + F7              VirtualBox
+  MOD + F8              Thunar
+  MOD + F9              Lollypop
+  MOD + F10             Spotify
+  MOD + F11/F12         Rofi
+
+┌───────────────────────────────────────────────────────────────────┐
+│  WALLPAPER                                                        │
+└───────────────────────────────────────────────────────────────────┘
+  MOD + w               Next wallpaper
+  MOD + Shift + w       Previous wallpaper
+
+┌───────────────────────────────────────────────────────────────────┐
+│  CTRL + ALT SHORTCUTS                                             │
+└───────────────────────────────────────────────────────────────────┘
+  Ctrl + Alt + t        Alacritty
+  Ctrl + Alt + Return   st terminal
+  Ctrl + Alt + b        Thunar
+  Ctrl + Alt + f        Firefox
+  Ctrl + Alt + g        Chromium
+  Ctrl + Alt + v        Vivaldi
+  Ctrl + Alt + p        Pamac (package manager)
+  Ctrl + Alt + m        XFCE Settings
+  Ctrl + Alt + u        Pavucontrol
+  Ctrl + Alt + o        Picom toggle
+  Ctrl + Alt + l/k      Logout
+
+┌───────────────────────────────────────────────────────────────────┐
+│  MEDIA KEYS                                                       │
+└───────────────────────────────────────────────────────────────────┘
+  Volume Up/Down        Adjust volume
+  Mute                  Toggle mute
+  Brightness Up/Down    Adjust brightness
+  Play/Pause            Toggle playback
+  Next/Prev             Next/previous track
+
+┌───────────────────────────────────────────────────────────────────┐
+│  OTHER                                                            │
+└───────────────────────────────────────────────────────────────────┘
+  Print                 Screenshot (scrot)
+  Ctrl + Print          XFCE Screenshooter
+  Ctrl + Super + Print  Flameshot
+  F12                   Dropdown terminal
+  MOD + Shift + s       Reload sxhkd config
+
+╔═══════════════════════════════════════════════════════════════════╗
+║  Press 'q' to close this window                                   ║
+╚═══════════════════════════════════════════════════════════════════╝

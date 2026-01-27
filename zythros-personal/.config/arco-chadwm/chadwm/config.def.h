@@ -14,20 +14,20 @@ static const int smartgaps          = 0;        /* 1 means no outer gap when the
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails,display systray on the 1st monitor,False: display systray on last monitor*/
-static const int showsystray        = 1;        /* 0 means no systray */
+static const int showsystray        = 0;        /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int showtab            = showtab_auto;
 static const int toptab             = 1;        /* 0 means bottom tab */
 static const int floatbar           = 0;        /* 1 means the bar will float(don't have padding),0 means the bar have padding */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const int horizpadbar        = 5;        /* padding inside the bar */
-static const int vertpadbar         = 11;       /* padding inside the bar */
+static const int vertpadbar         = 2;        /* padding inside the bar */
 static const int vertpadtab         = 35;
 static const int horizpadtabi       = 15;
 static const int horizpadtabo       = 15;
 static const int scalepreview       = 4;
 static const int tag_preview        = 1;        /* 1 means enable, 0 is off */
-static const int colorfultag        = 1;        /* 0 means use SchemeSel for selected non vacant tag */
+static const int colorfultag        = 0;        /* 0 means use SchemeSel for selected non vacant tag */
 static const char *upvol[]   = { "/usr/bin/pactl", "set-sink-volume", "0", "+5%",     NULL };
 static const char *downvol[] = { "/usr/bin/pactl", "set-sink-volume", "0", "-5%",     NULL };
 static const char *mutevol[] = { "/usr/bin/pactl", "set-sink-mute",   "0", "toggle",  NULL };
@@ -54,7 +54,7 @@ static const char *colors[][3]      = {
     [SchemeNorm]       = { gray3,   black,  gray2 },
     [SchemeSel]        = { gray4,   blue,   blue  },
     [SchemeTitle]      = { white,   black,  black }, // active window title
-    [TabSel]           = { blue,    gray2,  black },
+    [TabSel]           = { blue,    black,  black },
     [TabNorm]          = { gray3,   black,  black },
     [SchemeTag]        = { gray3,   black,  black },
     [SchemeTag1]       = { blue,    black,  black },
@@ -95,10 +95,7 @@ static const char* vscodium[] = { "codium", NULL };
 
 static const Launcher launchers[] = {
     /* command     name to display */
-
-    { pavucontrol,   "󰖀" },
-    { mullvad,       "󰠥" },
-    { vscodium,      "󰨞" },
+    { NULL,          NULL },
 };
 
 
@@ -107,7 +104,7 @@ static const int tagschemes[] = {
 };
 
 static const unsigned int ulinepad      = 5; /* horizontal padding between the underline and tag */
-static const unsigned int ulinestroke   = 2; /* thickness / height of the underline */
+static const unsigned int ulinestroke   = 0; /* thickness / height of the underline */
 static const unsigned int ulinevoffset  = 0; /* how far above the bottom of the bar the line should appear */
 static const int ulineall               = 0; /* 1 to show underline on all tags, 0 for just the active ones */
 
@@ -185,7 +182,7 @@ static const Key keys[] = {
     //{ MODKEY,                           XK_Return,  spawn,            SHCMD("st")},
 
     // toggle stuff
-    { MODKEY,                           XK_b,       togglebar,      {0} },
+    { MODKEY|ShiftMask,                 XK_b,       togglebar,      {0} },
     { MODKEY|ControlMask,               XK_t,       togglegaps,     {0} },
     { MODKEY|ShiftMask,                 XK_space,   togglefloating, {0} },
     { MODKEY,                           XK_f,       togglefullscr,  {0} },
@@ -251,7 +248,7 @@ static const Key keys[] = {
     { MODKEY|ControlMask,               XK_F11,      setlayout,      {.v = &layouts[0]} },
     { MODKEY|ControlMask,               XK_F12,      setlayout,      {.v = &layouts[0]} },
 
-    { MODKEY,                           XK_space,   setlayout,      {0} },
+    // { MODKEY,                           XK_space,   setlayout,      {0} }, // moved to sxhkd for keybinds display
     { MODKEY|ControlMask,               XK_p,       cyclelayout,    {.i = -1 } },
     { MODKEY|ControlMask,               XK_m,       cyclelayout,    {.i = +1 } },
     { MODKEY,                           XK_0,       view,           {.ui = ~0 } },
@@ -264,7 +261,7 @@ static const Key keys[] = {
     // change border size
     { MODKEY|ShiftMask,                 XK_minus,   setborderpx,    {.i = -1 } },
     { MODKEY|ShiftMask,                 XK_p,       setborderpx,    {.i = +1 } },
-    { MODKEY|ShiftMask,                 XK_w,       setborderpx,    {.i = default_border } },
+    // { MODKEY|ShiftMask,                 XK_w,       setborderpx,    {.i = default_border } }, // moved to sxhkd for wallpaper prev
 
     // kill dwm
     //{ MODKEY|ControlMask,               XK_q,       spawn,        SHCMD("killall bar.sh chadwm") },

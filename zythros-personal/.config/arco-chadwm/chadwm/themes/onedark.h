@@ -1,0 +1,13 @@
+static const char black[]       = "#0a0a0a";  // dark black (matches dmenu/dwm-rev1)
+static const char white[]       = "#abb2bf";
+static const char gray2[]       = "#0a0a0a"; // unfocused window border (matches bar)
+static const char gray3[]       = "#545862";
+static const char gray4[]       = "#6d8dad";
+static const char blue[]        = "#99f6e4";  // focused window border (teal - matches dmenu/dwm-rev1)
+static const char green[]       = "#7EC7A2";
+static const char red[]         = "#e06c75";
+static const char orange[]      = "#caaa6a";
+static const char yellow[]      = "#EBCB8B";
+static const char pink[]        = "#c678dd";
+static const char pinky[]       = "#d57780";
+static const char col_borderbar[]  = "#0a0a0a"; // inner border (matches bar background)

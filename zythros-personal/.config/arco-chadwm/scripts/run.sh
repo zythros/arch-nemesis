@@ -50,14 +50,14 @@ picom -b  --config ~/.config/arco-chadwm/picom/picom.conf &
 run "numlockx on"
 run "volumeicon"
 #run "pa-applet"
-sxhkd -c ~/.config/arco-chadwm/sxhkd/sxhkdrc &
+pkill -x sxhkd; sleep 0.2; sxhkd -c ~/.config/arco-chadwm/sxhkd/sxhkdrc &
 #run "nitrogen --restore"
 #run "conky -c $HOME/.config/arco-chadwm/conky/system-overview"
 #you can set wallpapers in themes as well
 #feh --bg-fill /usr/share/backgrounds/archlinux/arch-wallpaper.jpg &
 #feh --bg-fill /usr/share/backgrounds/arcolinux/arco-wallpaper.jpg &
 #feh --bg-fill ~/.config/arco-chadwm/wallpaper/chadwm.jpg &
-feh --bg-fill ~/.config/arco-chadwm/wallpaper/chadwm2.jpg &
+~/.local/bin/wallpaper.sh restore &
 #feh --randomize --bg-fill /home/erik/Insync/Apps/Wallhaven/*
 
 
@@ -77,6 +77,7 @@ feh --bg-fill ~/.config/arco-chadwm/wallpaper/chadwm2.jpg &
 #run "/usr/bin/octopi-notifier"
 
 
-pkill bar.sh
-~/.config/arco-chadwm/scripts/bar.sh &
+pkill -x bar.sh
+pkill -x slstatus
+slstatus &
 while type chadwm >/dev/null; do chadwm && continue || break; done
