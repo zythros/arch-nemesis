@@ -51,14 +51,6 @@ if pacman -Qi picom-git &>/dev/null; then
     sudo pacman -Rns --noconfirm picom-git
 fi
 
-# Remove system dmenu (we'll use zythros fork)
-if [ -f /usr/bin/dmenu ]; then
-    tput setaf 3
-    echo "Removing system dmenu (will be replaced with zythros fork)..."
-    tput sgr0
-    sudo rm -f /usr/bin/dmenu /usr/bin/dmenu_run /usr/bin/dmenu_path
-fi
-
 # Copy .config files from zythros-personal
 if [ -d "$installed_dir/zythros-personal/.config" ]; then
     cp -rv "$installed_dir/zythros-personal/.config/"* "$HOME/.config/"
@@ -72,57 +64,15 @@ if [ -f "$installed_dir/810-wallpaper-setup.sh" ]; then
     bash "$installed_dir/810-wallpaper-setup.sh"
 fi
 
-##################################################################################################################################
-# Install dmenu (zythros fork with center, grid, border patches)
-##################################################################################################################################
-
-echo
-tput setaf 3
-echo "########################################################################"
-echo "################### Installing dmenu (zythros fork)"
-echo "########################################################################"
-tput sgr0
-echo
-
-DMENU_DIR="$HOME/.config/arco-chadwm/dmenu"
-DMENU_REPO="https://github.com/zythros/dmenu.git"
-
-if [ ! -d "$DMENU_DIR" ]; then
-    git clone "$DMENU_REPO" "$DMENU_DIR"
+# Set up dmenu (calls separate script)
+if [ -f "$installed_dir/820-dmenu-setup.sh" ]; then
+    bash "$installed_dir/820-dmenu-setup.sh"
 fi
 
-cd "$DMENU_DIR"
-sudo make clean install
-
-tput setaf 2
-echo "dmenu installed from zythros fork"
-tput sgr0
-
-##################################################################################################################################
-# Install slstatus (zythros fork)
-##################################################################################################################################
-
-echo
-tput setaf 3
-echo "########################################################################"
-echo "################### Installing slstatus (zythros fork)"
-echo "########################################################################"
-tput sgr0
-echo
-
-SLSTATUS_DIR="$HOME/.config/arco-chadwm/slstatus"
-SLSTATUS_REPO="https://github.com/zythros/slstatus.git"
-
-if [ ! -d "$SLSTATUS_DIR" ]; then
-    git clone "$SLSTATUS_REPO" "$SLSTATUS_DIR"
+# Set up slstatus (calls separate script)
+if [ -f "$installed_dir/830-slstatus-setup.sh" ]; then
+    bash "$installed_dir/830-slstatus-setup.sh"
 fi
-
-cd "$SLSTATUS_DIR"
-sudo make clean install
-
-tput setaf 2
-echo "slstatus installed from zythros fork"
-tput sgr0
 
 ##################################################################################################################################
 # Rebuild chadwm with personal config
