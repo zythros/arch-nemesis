@@ -40,7 +40,8 @@ static const int new_window_attach_on_end = 0; /*  1 means the new window will a
 static const char *fonts[]          = {"JetBrainsMono Nerd Font Mono:style:bold:size=13"};
 
 // theme
-#include "themes/onedark.h"
+//#include "themes/onedark.h"
+#include "themes/zythrosdark.h"
 //#include "themes/prime.h"
 //#include "themes/catppuccin.h"
 //#include "themes/dracula.h"
