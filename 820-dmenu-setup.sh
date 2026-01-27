@@ -142,6 +142,69 @@ else
 fi
 
 ##################################################################################################################################
+# Configure sxhkd keybind for dmenu
+##################################################################################################################################
+
+SXHKDRC="$HOME/.config/arco-chadwm/sxhkd/sxhkdrc"
+DMENU_CMD="dmenu_run -c -l 8 -fn 'JetBrains Mono NerdFont:size=12:style=Bold' -nb '#0a0a0a' -nf '#cdd6f4' -sb '#99f6e4' -sf '#0a0a0a'"
+
+if [ -f "$SXHKDRC" ]; then
+    tput setaf 3
+    echo "Configuring sxhkd keybind for dmenu..."
+    tput sgr0
+
+    # Backup sxhkdrc
+    cp "$SXHKDRC" "${SXHKDRC}.bak.$(date +%s)"
+
+    # Check if super + d binding exists
+    if grep -q "^super + d$" "$SXHKDRC"; then
+        # Replace the command line after "super + d"
+        # Use awk to find "super + d" and replace the next non-comment, non-empty line
+        awk -v cmd="$DMENU_CMD" '
+        /^super \+ d$/ {
+            print
+            found = 1
+            next
+        }
+        found && /^[[:space:]]+[^#]/ {
+            print "    " cmd
+            found = 0
+            next
+        }
+        { print }
+        ' "$SXHKDRC" > "${SXHKDRC}.tmp" && mv "${SXHKDRC}.tmp" "$SXHKDRC"
+
+        tput setaf 2
+        echo "Updated existing super + d binding"
+        tput sgr0
+    else
+        # Add new binding at end of file
+        cat >> "$SXHKDRC" << EOF
+
+#dmenu (zythros fork - centered, grid, border patches)
+super + d
+    $DMENU_CMD
+EOF
+        tput setaf 2
+        echo "Added new super + d binding"
+        tput sgr0
+    fi
+
+    # Reload sxhkd if running
+    if pgrep -x sxhkd >/dev/null; then
+        pkill -USR1 -x sxhkd
+        tput setaf 2
+        echo "Reloaded sxhkd"
+        tput sgr0
+    fi
+else
+    tput setaf 3
+    echo "NOTE: sxhkdrc not found at $SXHKDRC"
+    echo "You may need to manually add the dmenu keybind"
+    tput sgr0
+fi
+
+##################################################################################################################################
 # Verify installation
 ##################################################################################################################################
 
