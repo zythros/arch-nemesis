@@ -148,9 +148,9 @@ super + shift + d
 super + p
     dmenu_run -i -nb '#191919' -nf '#fea63c' -sb '#fea63c' -sf '#191919' -fn 'NotoMonoRegular:bold:pixelsize=14'
 
-#dmenu (zythros fork - centered, border, grid patches)
+#dmenu (zythros fork + j4-dmenu-desktop for .desktop support)
 super + d
-    dmenu_run -c -l 8 -fn 'JetBrains Mono NerdFont:size=12:style=Bold' -nb '#0a0a0a' -nf '#cdd6f4' -sb '#99f6e4' -sf '#0a0a0a'
+    j4-dmenu-desktop --dmenu="dmenu -i -c -l 8 -fn 'JetBrains Mono NerdFont:size=12:style=Bold' -nb '#0a0a0a' -nf '#cdd6f4' -sb '#99f6e4' -sf '#0a0a0a'"
 
 #Screenshot (flameshot)
 super + s

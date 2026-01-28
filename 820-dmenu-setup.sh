@@ -59,6 +59,14 @@ if ! pacman -Qi libxinerama &>/dev/null; then
     sudo pacman -S --noconfirm --needed libxinerama
 fi
 
+# Install j4-dmenu-desktop (reads .desktop files for dmenu)
+if ! command -v j4-dmenu-desktop &>/dev/null; then
+    tput setaf 3
+    echo "Installing j4-dmenu-desktop (for .desktop file support)..."
+    tput sgr0
+    sudo pacman -S --noconfirm --needed j4-dmenu-desktop
+fi
+
 ##################################################################################################################################
 # Remove system dmenu if present
 ##################################################################################################################################
@@ -146,7 +154,9 @@ fi
 ##################################################################################################################################
 
 SXHKDRC="$HOME/.config/arco-chadwm/sxhkd/sxhkdrc"
-DMENU_CMD="dmenu_run -c -l 8 -fn 'JetBrains Mono NerdFont:size=12:style=Bold' -nb '#0a0a0a' -nf '#cdd6f4' -sb '#99f6e4' -sf '#0a0a0a'"
+DMENU_CMD="j4-dmenu-desktop --dmenu=\"dmenu -i -c -l 8 -fn 'JetBrains Mono NerdFont:size=12:style=Bold' -nb '#0a0a0a' -nf '#cdd6f4' -sb '#99f6e4' -sf '#0a0a0a'\""
+
+DMENU_COMMENT="#dmenu (zythros fork + j4-dmenu-desktop for .desktop support)"
 
 if [ -f "$SXHKDRC" ]; then
     tput setaf 3
@@ -158,9 +168,21 @@ if [ -f "$SXHKDRC" ]; then
 
     # Check if super + d binding exists
     if grep -q "^super + d$" "$SXHKDRC"; then
-        # Replace the command line after "super + d"
-        # Use awk to find "super + d" and replace the next non-comment, non-empty line
-        awk -v cmd="$DMENU_CMD" '
+        # Replace the comment and command for "super + d"
+        awk -v cmd="$DMENU_CMD" -v comment="$DMENU_COMMENT" '
+        /^#.*dmenu/ {
+            # Check if next line is "super + d"
+            prev = $0
+            if (getline && /^super \+ d$/) {
+                print comment
+                print
+                found = 1
+            } else {
+                print prev
+                print
+            }
+            next
+        }
         /^super \+ d$/ {
             print
             found = 1
@@ -181,7 +203,7 @@ if [ -f "$SXHKDRC" ]; then
         # Add new binding at end of file
         cat >> "$SXHKDRC" << EOF
 
-#dmenu (zythros fork - centered, grid, border patches)
+$DMENU_COMMENT
 super + d
     $DMENU_CMD
 EOF
@@ -226,16 +248,19 @@ echo "  - Source: $DMENU_DIR"
 echo "  - Binary: $DMENU_PATH"
 echo "  - Version: $DMENU_VERSION"
 echo
+echo "j4-dmenu-desktop installed:"
+echo "  - Reads .desktop files (like rofi drun mode)"
+echo "  - Shows apps by their display name"
+echo
 echo "Patches included:"
 echo "  - center: dmenu appears centered on screen"
 echo "  - grid: display items in a grid layout"
 echo "  - border: adds border around dmenu window"
 echo
 echo "Usage (sxhkd keybind MOD + d):"
-echo "  dmenu_run -c -l 8 -fn 'JetBrains Mono NerdFont:size=12:style=Bold' \\"
-echo "    -nb '#0a0a0a' -nf '#cdd6f4' -sb '#99f6e4' -sf '#0a0a0a'"
+echo "  j4-dmenu-desktop --dmenu=\"dmenu -c -l 8 ... \""
 echo
-echo "Options:"
+echo "dmenu options:"
 echo "  -c     : Center dmenu on screen"
 echo "  -l N   : Show N lines (grid mode)"
 echo "  -fn    : Font specification"
