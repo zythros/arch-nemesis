@@ -54,6 +54,10 @@ super + F11
 super + F12
     rofi -show drun
 
+#Rofi fullscreen launcher (original chadwm)
+super + shift + d
+    rofi -no-config -no-lazy-grab -show drun -modi drun -theme ~/.config/arco-chadwm/rofi/launcher2.rasi
+
 #################################################################
 # SUPER + ... KEYS
 #################################################################

@@ -78,6 +78,7 @@
   MOD + Return          Alacritty terminal
   MOD + Shift + Return  Thunar file manager
   MOD + d               dmenu (app launcher)
+  MOD + Shift + d       Rofi fullscreen launcher
   MOD + Space           Show this keybinds file
   MOD + x               Logout menu
   MOD + Escape          xkill
