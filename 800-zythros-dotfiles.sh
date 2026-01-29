@@ -59,6 +59,15 @@ if [ -d "$installed_dir/zythros-personal/.config" ]; then
     tput sgr0
 fi
 
+# Copy .local/share/applications (custom .desktop files)
+if [ -d "$installed_dir/zythros-personal/.local/share/applications" ]; then
+    mkdir -p "$HOME/.local/share/applications"
+    cp -rv "$installed_dir/zythros-personal/.local/share/applications/"* "$HOME/.local/share/applications/"
+    tput setaf 2
+    echo "Copied custom .desktop files to ~/.local/share/applications/"
+    tput sgr0
+fi
+
 # Set up wallpaper system (calls separate script)
 if [ -f "$installed_dir/810-wallpaper-setup.sh" ]; then
     bash "$installed_dir/810-wallpaper-setup.sh"
@@ -117,6 +126,7 @@ echo "  - slstatus (zythros fork)"
 echo "  - wallpaper.sh (MOD+w / MOD+Shift+w)"
 echo "  - sxhkd keybinds"
 echo "  - alacritty config (fish shell)"
+echo "  - custom .desktop files (lxappearance)"
 echo
 echo "Key bindings:"
 echo "  MOD + d         : dmenu"

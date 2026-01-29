@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=lxappearance
+GenericName=GTK Theme Switcher
+Comment=Customize look and feel of your desktop and applications
+Keywords=theme;icons;gtk;appearance;style;
+Icon=preferences-desktop-theme
+Exec=lxappearance
+StartupNotify=true
+Categories=GTK;Settings;DesktopSettings;
