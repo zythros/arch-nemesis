@@ -185,6 +185,56 @@ echo "grub-btrfs enabled (snapshots will appear in GRUB menu)"
 tput sgr0
 
 ##################################################################################################################################
+# Install snapper-rollback from AUR (proper rollback for Arch)
+##################################################################################################################################
+
+tput setaf 3
+echo "Installing snapper-rollback from AUR..."
+tput sgr0
+
+# Check for AUR helper
+if command -v yay &>/dev/null; then
+    yay -S --noconfirm --needed snapper-rollback
+elif command -v paru &>/dev/null; then
+    paru -S --noconfirm --needed snapper-rollback
+else
+    tput setaf 3
+    echo "No AUR helper found (yay/paru). Skipping snapper-rollback."
+    echo "Install manually with: yay -S snapper-rollback"
+    tput sgr0
+fi
+
+##################################################################################################################################
+# Configure snapper-rollback for this system's layout
+##################################################################################################################################
+
+if command -v snapper-rollback &>/dev/null; then
+    tput setaf 3
+    echo "Configuring snapper-rollback..."
+    tput sgr0
+
+    # Create btrfsroot mount point
+    sudo mkdir -p /btrfsroot
+
+    # Detect root subvolume name and device
+    ROOT_SUBVOL=$(findmnt -n -o SOURCE / | sed 's/.*\[\/\([^]]*\)\].*/\1/')
+    ROOT_DEV=$(findmnt -n -o SOURCE / | sed 's/\[.*//')
+
+    # Write config
+    sudo tee /etc/snapper-rollback.conf > /dev/null << EOF
+[root]
+subvol_main = $ROOT_SUBVOL
+subvol_snapshots = $ROOT_SUBVOL/.snapshots
+mountpoint = /btrfsroot
+dev = $ROOT_DEV
+EOF
+
+    tput setaf 2
+    echo "snapper-rollback configured for subvolume: $ROOT_SUBVOL"
+    tput sgr0
+fi
+
+##################################################################################################################################
 # Create initial snapshot
 ##################################################################################################################################
 
@@ -193,6 +243,16 @@ echo "Creating initial snapshot..."
 tput sgr0
 
 sudo snapper -c root create --description "Initial snapshot after snapper setup"
+
+##################################################################################################################################
+# Regenerate GRUB config to include snapshots
+##################################################################################################################################
+
+tput setaf 3
+echo "Regenerating GRUB config to include snapshots..."
+tput sgr0
+
+sudo grub-mkconfig -o /boot/grub/grub.cfg
 
 ##################################################################################################################################
 # Summary
@@ -207,9 +267,10 @@ echo
 echo "Snapper BTRFS snapshot system installed:"
 echo
 echo "Packages installed:"
-echo "  - snapper        : Snapshot management tool"
-echo "  - snap-pac       : Auto snapshots before/after pacman operations"
-echo "  - grub-btrfs     : Adds snapshots to GRUB boot menu"
+echo "  - snapper          : Snapshot management tool"
+echo "  - snap-pac         : Auto snapshots before/after pacman operations"
+echo "  - grub-btrfs       : Adds snapshots to GRUB boot menu"
+echo "  - snapper-rollback : Full system rollback support (AUR)"
 echo
 echo "Configuration:"
 echo "  - Config file: /etc/snapper/configs/root"
@@ -232,11 +293,17 @@ echo "Usage:"
 echo "  snapper -c root list              : List all snapshots"
 echo "  snapper -c root create -d \"desc\"  : Create manual snapshot"
 echo "  snapper -c root delete <num>      : Delete snapshot"
-echo "  snapper -c root undochange 1..0   : Rollback to snapshot 1"
+echo "  snapper -c root status 1..0       : Compare snapshot 1 to current"
+echo "  snapper -c root undochange 2..3   : Revert changes between snapshots"
+echo
+echo "Full system rollback (snapper-rollback):"
+echo "  sudo snapper-rollback --dry-run 1 : Preview rollback to snapshot 1"
+echo "  echo CONFIRM | sudo snapper-rollback 1 : Rollback to snapshot 1"
+echo "  (Reboot required after rollback)"
 echo
 echo "Rollback from GRUB:"
-echo "  1. Reboot and select snapshot from GRUB menu"
+echo "  1. Reboot and select snapshot from GRUB submenu"
 echo "  2. Boot into snapshot (read-only)"
-echo "  3. Use snapper to rollback or restore files"
+echo "  3. Use snapper-rollback to make permanent"
 echo
 tput sgr0
