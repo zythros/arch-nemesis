@@ -57,7 +57,7 @@ echo
 # Install snapper and related packages
 ##################################################################################################################################
 
-SNAPPER_PACKAGES="snapper snap-pac grub-btrfs"
+SNAPPER_PACKAGES="snapper snap-pac grub-btrfs inotify-tools"
 
 tput setaf 3
 echo "Installing snapper packages..."
