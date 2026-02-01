@@ -83,6 +83,12 @@ if [ -f "$installed_dir/830-slstatus-setup.sh" ]; then
     bash "$installed_dir/830-slstatus-setup.sh"
 fi
 
+# Set up snapper for BTRFS snapshots (calls separate script)
+# Script will check for BTRFS and skip if not present
+if [ -f "$installed_dir/840-snapper-setup.sh" ]; then
+    bash "$installed_dir/840-snapper-setup.sh"
+fi
+
 ##################################################################################################################################
 # Rebuild chadwm with personal config
 ##################################################################################################################################
@@ -127,6 +133,7 @@ echo "  - wallpaper.sh (MOD+w / MOD+Shift+w)"
 echo "  - sxhkd keybinds"
 echo "  - alacritty config (fish shell)"
 echo "  - custom .desktop files (lxappearance)"
+echo "  - snapper (BTRFS only: automatic snapshots + grub integration)"
 echo
 echo "Key bindings:"
 echo "  MOD + d         : dmenu"
