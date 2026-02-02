@@ -72,13 +72,13 @@ if ! command -v pacman &>/dev/null; then
     exit 1
 fi
 
-# Check for GRUB bootloader
-if [ ! -d /boot/grub ] && [ ! -f /boot/grub/grub.cfg ]; then
+# Check for GRUB bootloader (use sudo - /boot/grub may have restricted permissions)
+if ! sudo test -d /boot/grub && ! sudo test -f /boot/grub/grub.cfg; then
     tput setaf 1
     echo "ERROR: GRUB bootloader not detected"
     echo "This script requires GRUB for snapshot boot menu integration."
     echo "Detected bootloader setup:"
-    ls -la /boot/ 2>/dev/null | head -10
+    sudo ls -la /boot/ 2>/dev/null | head -10
     echo
     echo "If using systemd-boot or another bootloader, manual setup is required."
     tput sgr0
