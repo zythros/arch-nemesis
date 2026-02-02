@@ -54,6 +54,42 @@ tput sgr0
 echo
 
 ##################################################################################################################################
+# Track warnings for final summary
+##################################################################################################################################
+
+WARNINGS=()
+
+##################################################################################################################################
+# Check for required tools
+##################################################################################################################################
+
+# Check for pacman (Arch-based system)
+if ! command -v pacman &>/dev/null; then
+    tput setaf 1
+    echo "ERROR: pacman not found"
+    echo "This script requires an Arch-based system (Arch, Manjaro, EndeavourOS, ArcoLinux, etc.)"
+    tput sgr0
+    exit 1
+fi
+
+# Check for GRUB bootloader
+if [ ! -d /boot/grub ] && [ ! -f /boot/grub/grub.cfg ]; then
+    tput setaf 1
+    echo "ERROR: GRUB bootloader not detected"
+    echo "This script requires GRUB for snapshot boot menu integration."
+    echo "Detected bootloader setup:"
+    ls -la /boot/ 2>/dev/null | head -10
+    echo
+    echo "If using systemd-boot or another bootloader, manual setup is required."
+    tput sgr0
+    exit 1
+fi
+
+tput setaf 2
+echo "GRUB bootloader detected"
+tput sgr0
+
+##################################################################################################################################
 # Install snapper and related packages
 ##################################################################################################################################
 
@@ -63,7 +99,13 @@ tput setaf 3
 echo "Installing snapper packages..."
 tput sgr0
 
-sudo pacman -S --noconfirm --needed $SNAPPER_PACKAGES
+if ! sudo pacman -S --noconfirm --needed $SNAPPER_PACKAGES; then
+    tput setaf 1
+    echo "ERROR: Failed to install snapper packages"
+    echo "Check your internet connection and pacman configuration."
+    tput sgr0
+    exit 1
+fi
 
 ##################################################################################################################################
 # Check if snapper root config already exists
@@ -160,10 +202,14 @@ echo "Enabling snapper systemd timers..."
 tput sgr0
 
 # Timeline timer: takes hourly snapshots
-sudo systemctl enable --now snapper-timeline.timer
+if ! sudo systemctl enable --now snapper-timeline.timer; then
+    WARNINGS+=("snapper-timeline.timer: Failed to enable (hourly snapshots won't run automatically)")
+fi
 
 # Cleanup timer: removes old snapshots based on limits
-sudo systemctl enable --now snapper-cleanup.timer
+if ! sudo systemctl enable --now snapper-cleanup.timer; then
+    WARNINGS+=("snapper-cleanup.timer: Failed to enable (old snapshots won't be cleaned automatically)")
+fi
 
 tput setaf 2
 echo "Snapper timers enabled"
@@ -178,11 +224,16 @@ echo "Enabling grub-btrfs daemon..."
 tput sgr0
 
 # This watches for new snapshots and regenerates grub menu
-sudo systemctl enable --now grub-btrfsd
-
-tput setaf 2
-echo "grub-btrfs enabled (snapshots will appear in GRUB menu)"
-tput sgr0
+if ! sudo systemctl enable --now grub-btrfsd; then
+    tput setaf 3
+    echo "WARNING: Failed to enable grub-btrfsd service"
+    tput sgr0
+    WARNINGS+=("grub-btrfsd: Failed to enable (snapshots won't auto-update in GRUB menu)")
+else
+    tput setaf 2
+    echo "grub-btrfs enabled (snapshots will appear in GRUB menu)"
+    tput sgr0
+fi
 
 ##################################################################################################################################
 # Install snapper-rollback from AUR (proper rollback for Arch)
@@ -194,14 +245,24 @@ tput sgr0
 
 # Check for AUR helper
 if command -v yay &>/dev/null; then
-    yay -S --noconfirm --needed snapper-rollback
+    if ! yay -S --noconfirm --needed snapper-rollback; then
+        tput setaf 3
+        echo "WARNING: Failed to install snapper-rollback from AUR"
+        tput sgr0
+        WARNINGS+=("snapper-rollback: AUR installation failed (install manually: yay -S snapper-rollback)")
+    fi
 elif command -v paru &>/dev/null; then
-    paru -S --noconfirm --needed snapper-rollback
+    if ! paru -S --noconfirm --needed snapper-rollback; then
+        tput setaf 3
+        echo "WARNING: Failed to install snapper-rollback from AUR"
+        tput sgr0
+        WARNINGS+=("snapper-rollback: AUR installation failed (install manually: paru -S snapper-rollback)")
+    fi
 else
     tput setaf 3
-    echo "No AUR helper found (yay/paru). Skipping snapper-rollback."
-    echo "Install manually with: yay -S snapper-rollback"
+    echo "WARNING: No AUR helper found (yay/paru). Skipping snapper-rollback."
     tput sgr0
+    WARNINGS+=("snapper-rollback: No AUR helper (yay/paru) found - install one, then run: yay -S snapper-rollback")
 fi
 
 ##################################################################################################################################
@@ -252,7 +313,12 @@ tput setaf 3
 echo "Regenerating GRUB config to include snapshots..."
 tput sgr0
 
-sudo grub-mkconfig -o /boot/grub/grub.cfg
+if ! sudo grub-mkconfig -o /boot/grub/grub.cfg; then
+    tput setaf 3
+    echo "WARNING: Failed to regenerate GRUB config"
+    tput sgr0
+    WARNINGS+=("grub-mkconfig: Failed to regenerate (run manually: sudo grub-mkconfig -o /boot/grub/grub.cfg)")
+fi
 
 ##################################################################################################################################
 # Summary
@@ -307,3 +373,26 @@ echo "  2. Boot into snapshot (read-only)"
 echo "  3. Use snapper-rollback to make permanent"
 echo
 tput sgr0
+
+##################################################################################################################################
+# Show warnings if any
+##################################################################################################################################
+
+if [ ${#WARNINGS[@]} -gt 0 ]; then
+    echo
+    tput setaf 3
+    echo "########################################################################"
+    echo "############################ WARNINGS ##################################"
+    echo "########################################################################"
+    echo
+    echo "The following issues occurred during setup:"
+    echo
+    for warning in "${WARNINGS[@]}"; do
+        echo "  ⚠ $warning"
+    done
+    echo
+    echo "Snapper is installed but some features may not work as expected."
+    echo "Review the warnings above and fix manually if needed."
+    echo "########################################################################"
+    tput sgr0
+fi
