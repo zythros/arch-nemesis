@@ -163,63 +163,24 @@ if [ -f /tmp/install-chadwm ] || [[ "$(basename "$0")" == "600-chadwm.sh" ]]; th
         sudo add-virtualbox-guest-utils
     fi
 
-    if [ ! -f /usr/local/bin/fix-sddm-conf ]; then
+    # Configure SDDM using local kde_settings.conf
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    SOURCE_FILE="$SCRIPT_DIR/Personal/settings/sddm/kde_settings.conf"
+    TARGET_DIR="/etc/sddm.conf.d"
+    TARGET_FILE="$TARGET_DIR/kde_settings.conf"
 
-        # fix-sddm-conf - run this if script is not available
+    sudo mkdir -p "$TARGET_DIR"
 
-        # URL of the file to download
-        URL="https://raw.githubusercontent.com/erikdubois/arcolinux-nemesis/refs/heads/master/Personal/settings/sddm/kde_settings.conf"
+    sudo cp "$SOURCE_FILE" "$TARGET_FILE"
 
-        # Target directory and filename
-        TARGET_DIR="/etc/sddm.conf.d"
-        TARGET_FILE="$TARGET_DIR/kde_settings.conf"
-
-        # Create the directory if it doesn't exist
-        sudo mkdir -p "$TARGET_DIR"
-
-        # Download the file to a temporary location
-        TMP_FILE=$(mktemp)
-        curl -fsSL "$URL" -o "$TMP_FILE"
-
-        # Check if download succeeded
-        if [[ $? -ne 0 ]]; then
-          echo "Error: Failed to download file from $URL"
-          exit 1
-        fi
-
-        # Replace or insert the User field
-        if grep -q "^User=" "$TMP_FILE"; then
-          sed -i "s/^User=.*/User=$USER/" "$TMP_FILE"
-        else
-          echo -e "\nUser=$USER" >> "$TMP_FILE"
-        fi
-
-        # Move the modified file to the target location
-        sudo mv "$TMP_FILE" "$TARGET_FILE"
-
-        echo
-        tput setaf 2
-        echo "########################################################################"
-        echo "###### SDDM configuration changed and set User=$USER at"
-        echo "###### /etc/sddm.conf.d/kde_settings.conf"
-        echo "###### Check with 'nsddmk' in a terminal and change the variables when necessary"
-        echo "########################################################################"
-        tput sgr0
-        echo
-
-    else
-        fix-sddm-conf
-
-        echo
-        tput setaf 2
-        echo "########################################################################"
-        echo "###### SDDM configuration changed and set User=$USER at"
-        echo "###### /etc/sddm.conf.d/kde_settings.conf"
-        echo "###### Check with 'nsddmk' in a terminal and change the variables when necessary"
-        echo "########################################################################"
-        tput sgr0
-        echo
-    fi
+    echo
+    tput setaf 2
+    echo "########################################################################"
+    echo "###### SDDM configuration installed at"
+    echo "###### /etc/sddm.conf.d/kde_settings.conf"
+    echo "########################################################################"
+    tput sgr0
+    echo
 fi
 
 echo
