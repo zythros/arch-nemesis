@@ -89,6 +89,11 @@ if [ -f "$installed_dir/840-snapper-setup.sh" ]; then
     bash "$installed_dir/840-snapper-setup.sh"
 fi
 
+# Set up SDDM theme background (calls separate script)
+if [ -f "$installed_dir/850-sddm-theme-setup.sh" ]; then
+    bash "$installed_dir/850-sddm-theme-setup.sh"
+fi
+
 ##################################################################################################################################
 # Rebuild chadwm with personal config
 ##################################################################################################################################
@@ -134,6 +139,7 @@ echo "  - sxhkd keybinds"
 echo "  - alacritty config (fish shell)"
 echo "  - custom .desktop files (lxappearance)"
 echo "  - snapper (BTRFS only: automatic snapshots + grub integration)"
+echo "  - SDDM theme (background image)"
 echo
 echo "Key bindings:"
 echo "  MOD + d         : dmenu"
