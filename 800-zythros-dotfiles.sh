@@ -68,6 +68,16 @@ if [ -d "$installed_dir/zythros-personal/.local/share/applications" ]; then
     tput sgr0
 fi
 
+# Copy .local/bin (volume scripts, etc.)
+if [ -d "$installed_dir/zythros-personal/.local/bin" ]; then
+    mkdir -p "$HOME/.local/bin"
+    cp -rv "$installed_dir/zythros-personal/.local/bin/"* "$HOME/.local/bin/"
+    chmod +x "$HOME/.local/bin/"*
+    tput setaf 2
+    echo "Copied scripts to ~/.local/bin/"
+    tput sgr0
+fi
+
 # Set up wallpaper system (calls separate script)
 if [ -f "$installed_dir/810-wallpaper-setup.sh" ]; then
     bash "$installed_dir/810-wallpaper-setup.sh"
@@ -92,6 +102,11 @@ fi
 # Set up SDDM theme background (calls separate script)
 if [ -f "$installed_dir/850-sddm-theme-setup.sh" ]; then
     bash "$installed_dir/850-sddm-theme-setup.sh"
+fi
+
+# Set up PipeWire audio and fix slstatus volume indicator (calls separate script)
+if [ -f "$installed_dir/860-audio-setup.sh" ]; then
+    bash "$installed_dir/860-audio-setup.sh"
 fi
 
 ##################################################################################################################################
@@ -140,6 +155,7 @@ echo "  - alacritty config (fish shell)"
 echo "  - custom .desktop files (lxappearance)"
 echo "  - snapper (BTRFS only: automatic snapshots + grub integration)"
 echo "  - SDDM theme (background image)"
+echo "  - PipeWire audio (replaces PulseAudio, fixes slstatus volume)"
 echo
 echo "Key bindings:"
 echo "  MOD + d         : dmenu"
