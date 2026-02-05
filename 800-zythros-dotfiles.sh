@@ -88,11 +88,6 @@ if [ -f "$installed_dir/820-dmenu-setup.sh" ]; then
     bash "$installed_dir/820-dmenu-setup.sh"
 fi
 
-# Set up slstatus (calls separate script)
-if [ -f "$installed_dir/830-slstatus-setup.sh" ]; then
-    bash "$installed_dir/830-slstatus-setup.sh"
-fi
-
 # Set up snapper for BTRFS snapshots (calls separate script)
 # Script will check for BTRFS and skip if not present
 if [ -f "$installed_dir/840-snapper-setup.sh" ]; then
@@ -104,7 +99,7 @@ if [ -f "$installed_dir/850-sddm-theme-setup.sh" ]; then
     bash "$installed_dir/850-sddm-theme-setup.sh"
 fi
 
-# Set up PipeWire audio and fix slstatus volume indicator (calls separate script)
+# Set up PipeWire audio (calls separate script)
 if [ -f "$installed_dir/860-audio-setup.sh" ]; then
     bash "$installed_dir/860-audio-setup.sh"
 fi
@@ -147,15 +142,15 @@ echo "##############################################################"
 echo
 echo "Installed components:"
 echo "  - chadwm (personal config with dwm-rev1 style tags)"
+echo "  - bar.sh (simple shell status bar)"
 echo "  - dmenu (zythros fork: center, grid, border patches)"
-echo "  - slstatus (zythros fork)"
 echo "  - wallpaper.sh (MOD+w / MOD+Shift+w)"
 echo "  - sxhkd keybinds"
 echo "  - alacritty config (fish shell)"
 echo "  - custom .desktop files (lxappearance)"
 echo "  - snapper (BTRFS only: automatic snapshots + grub integration)"
 echo "  - SDDM theme (background image)"
-echo "  - PipeWire audio (replaces PulseAudio, fixes slstatus volume)"
+echo "  - PipeWire audio"
 echo
 echo "Key bindings:"
 echo "  MOD + d         : dmenu"

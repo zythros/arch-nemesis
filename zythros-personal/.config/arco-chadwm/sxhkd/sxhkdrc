@@ -386,15 +386,15 @@ F12
 
 #Raises volume
 XF86AudioRaiseVolume
-    ~/.local/bin/volume-up.sh
+    amixer -D pulse set Master 10%+
 
 #Lowers volume
 XF86AudioLowerVolume
-    pactl set-sink-volume @DEFAULT_SINK@ -10%
+    amixer -D pulse set Master 10%-
 
 #Mute
 XF86AudioMute
-    pactl set-sink-mute @DEFAULT_SINK@ toggle
+    amixer -D pulse set Master 1+ toggle
 
 #Playerctl works for Pragha, Spotify and others
 #Delete the line for playerctl if you want to use mpc

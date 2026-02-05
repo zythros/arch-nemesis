@@ -77,7 +77,6 @@ pkill -x sxhkd; sleep 0.2; sxhkd -c ~/.config/arco-chadwm/sxhkd/sxhkdrc &
 #run "/usr/bin/octopi-notifier"
 
 
-pkill -x bar.sh
-pkill -x slstatus
-slstatus &
+pkill bar.sh
+~/.config/arco-chadwm/scripts/bar.sh &
 while type chadwm >/dev/null; do chadwm && continue || break; done

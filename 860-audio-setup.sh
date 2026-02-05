@@ -148,40 +148,7 @@ if [ "$VOLUME_SET" = false ]; then
 fi
 
 ##################################################################################################################################
-# 5. Fix slstatus volume indicator
-#    The zythros/slstatus repo default uses pamixer which may not be installed.
-#    Replace with pactl which works with both PulseAudio and PipeWire (via pipewire-pulse).
-##################################################################################################################################
-
-# Get real user's home (works even when run via sudo)
-REAL_USER="${SUDO_USER:-$USER}"
-REAL_HOME=$(getent passwd "$REAL_USER" | cut -d: -f6)
-SLSTATUS_DIR="$REAL_HOME/.config/arco-chadwm/slstatus"
-SLSTATUS_REBUILT=false
-
-if [ -d "$SLSTATUS_DIR" ]; then
-    echo
-    echo "Checking slstatus volume command..."
-
-    for cfg in "$SLSTATUS_DIR/config.h" "$SLSTATUS_DIR/config.def.h"; do
-        if [ -f "$cfg" ] && grep -q "pamixer" "$cfg"; then
-            echo "  Fixing $cfg: pamixer -> pactl"
-            sed -i 's#"pamixer --get-volume"#"pactl get-sink-volume @DEFAULT_SINK@ | grep -oE '"'"'[0-9]+%'"'"' | head -1"#g' "$cfg"
-        fi
-    done
-
-    # Rebuild slstatus if we changed anything
-    if [ -f "$SLSTATUS_DIR/config.h" ] && ! grep -q "pamixer" "$SLSTATUS_DIR/config.h"; then
-        echo "  Rebuilding slstatus..."
-        cd "$SLSTATUS_DIR" && sudo make clean install && SLSTATUS_REBUILT=true
-        echo "  slstatus rebuilt with pactl volume command"
-    fi
-else
-    echo "slstatus not found at $SLSTATUS_DIR (skipping volume indicator fix)"
-fi
-
-##################################################################################################################################
-# 6. Summary
+# 5. Summary
 ##################################################################################################################################
 
 echo
@@ -204,11 +171,6 @@ if [ "$VOLUME_SET" = true ]; then
     echo "Default volume: 75%, unmuted"
 else
     echo "Volume will be set on next graphical login"
-fi
-echo
-if [ "$SLSTATUS_REBUILT" = true ]; then
-    echo "slstatus: volume indicator updated (pamixer -> pactl)"
-    echo "  Restart slstatus: pkill -x slstatus; slstatus &"
 fi
 echo
 tput sgr0
