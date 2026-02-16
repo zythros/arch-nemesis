@@ -70,11 +70,15 @@ echo
 echo "Enabling services..."
 
 # spice-vdagentd: system daemon that manages the SPICE agent connection
-sudo systemctl enable spice-vdagentd.service
+# These units are "static" (activated via socket), so normal enable may not work.
+# Use --force to create symlinks for static units, and enable the socket as well.
+sudo systemctl enable spice-vdagentd.service --force 2>/dev/null
+sudo systemctl enable spice-vdagentd.socket --force 2>/dev/null
+sudo systemctl start spice-vdagentd.socket 2>/dev/null
 sudo systemctl start spice-vdagentd.service 2>/dev/null
 
 # qemu-guest-agent: host communication channel
-sudo systemctl enable qemu-guest-agent.service
+sudo systemctl enable qemu-guest-agent.service --force 2>/dev/null
 sudo systemctl start qemu-guest-agent.service 2>/dev/null
 
 ##################################################################################################################################
@@ -86,27 +90,21 @@ echo "Configuring spice-vdagent autostart..."
 
 # spice-vdagent (the user-space client) needs to run in the X session.
 # It's typically started via /etc/xdg/autostart/spice-vdagent.desktop
-# which the package provides. Verify it exists:
+# which the package should provide. If missing, create it.
 if [ -f /etc/xdg/autostart/spice-vdagent.desktop ]; then
     echo "  XDG autostart entry found (will start on next login)"
 else
-    # If missing, add it to run.sh as fallback
-    RUN_SH="$HOME/.config/arco-chadwm/scripts/run.sh"
-    if [ -f "$RUN_SH" ]; then
-        if ! grep -q "spice-vdagent" "$RUN_SH"; then
-            echo "  Adding spice-vdagent to run.sh..."
-            # Add before the status bar section
-            sed -i '/bar\.sh/i # Start spice-vdagent for VM clipboard sharing\nspice-vdagent &\n' "$RUN_SH"
-            echo "  Added spice-vdagent to run.sh"
-        else
-            echo "  spice-vdagent already in run.sh"
-        fi
-    else
-        tput setaf 3
-        echo "  Warning: No XDG autostart and no run.sh found"
-        echo "  You may need to start spice-vdagent manually or add it to your session startup"
-        tput sgr0
-    fi
+    echo "  XDG autostart entry missing - creating it..."
+    sudo tee /etc/xdg/autostart/spice-vdagent.desktop > /dev/null << 'DESKTOP'
+[Desktop Entry]
+Name=Spice vdagent
+Comment=Agent for Spice guests
+Exec=/usr/bin/spice-vdagent
+Terminal=false
+Type=Application
+NoDisplay=true
+DESKTOP
+    echo "  Created /etc/xdg/autostart/spice-vdagent.desktop"
 fi
 
 # If we're in a graphical session, start it now
