@@ -88,11 +88,9 @@ sudo systemctl start qemu-guest-agent.service 2>/dev/null
 echo
 echo "Configuring spice-vdagent autostart..."
 
-# spice-vdagent (the user-space client) needs to run in the X session.
-# It's typically started via /etc/xdg/autostart/spice-vdagent.desktop
-# which the package should provide. If missing, create it.
+# --- XDG autostart (for XFCE and other desktop environments) ---
 if [ -f /etc/xdg/autostart/spice-vdagent.desktop ]; then
-    echo "  XDG autostart entry found (will start on next login)"
+    echo "  XDG autostart entry found (XFCE/DEs will start on next login)"
 else
     echo "  XDG autostart entry missing - creating it..."
     sudo tee /etc/xdg/autostart/spice-vdagent.desktop > /dev/null << 'DESKTOP'
@@ -105,6 +103,22 @@ Type=Application
 NoDisplay=true
 DESKTOP
     echo "  Created /etc/xdg/autostart/spice-vdagent.desktop"
+fi
+
+# --- run.sh injection (for chadwm which doesn't read XDG autostart) ---
+RUNSH="$HOME/.config/arco-chadwm/scripts/run.sh"
+if [ -f "$RUNSH" ]; then
+    if grep -q "spice-vdagent" "$RUNSH"; then
+        echo "  run.sh already has spice-vdagent (chadwm covered)"
+    else
+        echo "  Adding spice-vdagent to run.sh (for chadwm)..."
+        cp "$RUNSH" "$RUNSH.bak.$(date +%s)"
+        # Insert before picom line
+        sed -i '/^picom -b/i # VM clipboard sharing (only runs if spice-vdagent is installed)\ncommand -v spice-vdagent \&>\/dev\/null \&\& run "spice-vdagent"\n' "$RUNSH"
+        echo "  Added to $RUNSH"
+    fi
+else
+    echo "  chadwm run.sh not found (will be covered if chadwm is installed later)"
 fi
 
 # If we're in a graphical session, start it now
