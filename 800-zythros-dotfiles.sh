@@ -104,6 +104,9 @@ if [ -f "$installed_dir/860-audio-setup.sh" ]; then
     bash "$installed_dir/860-audio-setup.sh"
 fi
 
+# Set up VM clipboard sharing (uncomment for VMs)
+#bash "$installed_dir/870-vm-clipboard-setup.sh"
+
 ##################################################################################################################################
 # Rebuild chadwm with personal config
 ##################################################################################################################################
@@ -151,6 +154,7 @@ echo "  - custom .desktop files (lxappearance)"
 echo "  - snapper (BTRFS only: automatic snapshots + grub integration)"
 echo "  - SDDM theme (background image)"
 echo "  - PipeWire audio"
+echo "  - VM clipboard sharing (spice-vdagent, VMs only)"
 echo
 echo "Key bindings:"
 echo "  MOD + d         : dmenu"
