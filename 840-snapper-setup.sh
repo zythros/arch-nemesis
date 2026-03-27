@@ -74,15 +74,12 @@ fi
 
 # Check for GRUB bootloader (use sudo - /boot/grub may have restricted permissions)
 if ! sudo test -d /boot/grub && ! sudo test -f /boot/grub/grub.cfg; then
-    tput setaf 1
-    echo "ERROR: GRUB bootloader not detected"
-    echo "This script requires GRUB for snapshot boot menu integration."
-    echo "Detected bootloader setup:"
-    sudo ls -la /boot/ 2>/dev/null | head -10
-    echo
-    echo "If using systemd-boot or another bootloader, manual setup is required."
+    tput setaf 3
+    echo "SKIP: GRUB bootloader not detected — snapper/grub-btrfs requires GRUB."
+    echo "      grub-btrfs snapshot boot menu integration is not available on systemd-boot"
+    echo "      or other bootloaders. Skipping this script."
     tput sgr0
-    exit 1
+    exit 0
 fi
 
 tput setaf 2
