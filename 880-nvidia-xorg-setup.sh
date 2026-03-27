@@ -30,19 +30,51 @@ echo "########################################################################"
 tput sgr0
 echo
 
-# Create Xorg config to force nvidia driver
-# Without this, Xorg defaults to modesetting which crashes via glamor_init with NVIDIA hardware
+# Create Xorg config to force nvidia driver on the display GPU (RTX 3060 LHR)
+# BusID pins Xorg to the 3060 so the 3090 (reserved for VFIO passthrough) is ignored.
+# Without this, Xorg may assign the second GPU to modesetting, which crashes via glamor_init.
 XORG_CONF="/etc/X11/xorg.conf.d/10-nvidia.conf"
+
+# Detect RTX 3060 LHR PCI address and convert to Xorg BusID format (decimal)
+PCI_ADDR=$(lspci | grep "GA106" | grep -i "VGA" | awk '{print $1}')
+if [ -z "$PCI_ADDR" ]; then
+    tput setaf 1
+    echo "ERROR: Could not detect RTX 3060 (GA106) PCI address. Aborting xorg conf write."
+    tput sgr0
+    exit 1
+fi
+BUS=$(printf "%d" "0x$(echo "$PCI_ADDR" | cut -d: -f1)")
+DEV=$(printf "%d" "0x$(echo "$PCI_ADDR" | cut -d: -f2 | cut -d. -f1)")
+FN=$(echo "$PCI_ADDR" | cut -d. -f2)
+BUS_ID="PCI:${BUS}:${DEV}:${FN}"
+echo "Detected RTX 3060 at $PCI_ADDR → Xorg BusID: $BUS_ID"
+
 echo "Writing $XORG_CONF ..."
-sudo tee "$XORG_CONF" > /dev/null << 'EOF'
+sudo tee "$XORG_CONF" > /dev/null << EOF
 Section "Device"
     Identifier  "Nvidia Card"
     Driver      "nvidia"
+    BusID       "$BUS_ID"
     Option      "NoLogo" "true"
 EndSection
 EOF
 tput setaf 2
 echo "Written: $XORG_CONF"
+tput sgr0
+
+# Write AutoAddGPU flag in a file that loads LAST (99-n > 99-k alphabetically).
+# 99-killX.conf also has a ServerFlags section; if Xorg doesn't merge sections across
+# files (last-file-wins per-section), that file would silently drop AutoAddGPU.
+# Putting this in 99-nvidia-flags.conf guarantees it survives regardless.
+FLAGS_CONF="/etc/X11/xorg.conf.d/99-nvidia-flags.conf"
+echo "Writing $FLAGS_CONF ..."
+sudo tee "$FLAGS_CONF" > /dev/null << EOF
+Section "ServerFlags"
+    Option "AutoAddGPU" "false"
+EndSection
+EOF
+tput setaf 2
+echo "Written: $FLAGS_CONF"
 tput sgr0
 
 ##################################################################################################################################
@@ -52,7 +84,7 @@ tput sgr0
 MODESET_PARAM="nvidia-drm.modeset=1"
 
 # Detect bootloader: systemd-boot or GRUB
-if [ -d "/boot/loader/entries" ] && ls /boot/loader/entries/*.conf &>/dev/null; then
+if sudo test -f "/boot/loader/loader.conf"; then
     tput setaf 3
     echo "Detected systemd-boot — adding $MODESET_PARAM to boot entries..."
     tput sgr0
@@ -100,10 +132,13 @@ echo "###################  $(basename $0) done"
 echo "##############################################################"
 echo
 echo "Configured:"
-echo "  - /etc/X11/xorg.conf.d/10-nvidia.conf (forces nvidia Xorg driver)"
+echo "  - /etc/X11/xorg.conf.d/10-nvidia.conf (forces nvidia Xorg driver, BusID pinned to RTX 3060)"
+echo "  - /etc/X11/xorg.conf.d/99-nvidia-flags.conf (AutoAddGPU false — loads after 99-killX.conf to avoid being overridden)"
 echo "  - kernel param: $MODESET_PARAM"
 echo
 echo "Fixes: Xorg modesetting/glamor crash with NVIDIA hardware (RTX 3060 LHR + RTX 3090)"
 echo "       that prevented SDDM from reaching the login screen."
+echo "       AutoAddGPU=false prevents the RTX 3090 from being assigned to modesetting"
+echo "       via AddGPUScreen, which triggers a glamor_init assertion crash."
 echo
 tput sgr0
