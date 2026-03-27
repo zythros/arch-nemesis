@@ -107,6 +107,11 @@ fi
 # Set up VM clipboard sharing (uncomment for VMs)
 #bash "$installed_dir/870-vm-clipboard-setup.sh"
 
+# Configure NVIDIA Xorg driver + kernel modeset param (fixes SDDM not reaching login screen)
+if [ -f "$installed_dir/880-nvidia-xorg-setup.sh" ]; then
+    bash "$installed_dir/880-nvidia-xorg-setup.sh"
+fi
+
 ##################################################################################################################################
 # Rebuild chadwm with personal config
 ##################################################################################################################################
