@@ -112,6 +112,11 @@ if [ -f "$installed_dir/880-nvidia-xorg-setup.sh" ]; then
     bash "$installed_dir/880-nvidia-xorg-setup.sh"
 fi
 
+# Configure VFIO passthrough for RTX 3090 (isolates it from nvidia driver for VM passthrough)
+if [ -f "$installed_dir/890-vfio-passthrough.sh" ]; then
+    bash "$installed_dir/890-vfio-passthrough.sh"
+fi
+
 ##################################################################################################################################
 # Rebuild chadwm with personal config
 ##################################################################################################################################
