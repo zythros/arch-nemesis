@@ -2,9 +2,8 @@
 #set -e
 ##################################################################################################################################
 # Author    : zythros
-# Purpose   : Configure VFIO passthrough for RTX 3090 (GA102) — isolates it from the nvidia driver
+# Purpose   : Configure VFIO passthrough for the secondary GPU — isolates it from the nvidia driver
 #             so it can be assigned exclusively to a VM via virt-manager / QEMU.
-#             The RTX 3060 LHR (GA106) remains the host display GPU.
 ##################################################################################################################################
 #
 #   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
@@ -32,7 +31,7 @@ tput sgr0
 echo
 
 ##################################################################################################################################
-# Detect the RTX 3090 (GA102) PCI address and IDs
+# Detect the passthrough GPU (GA102) PCI address and IDs
 ##################################################################################################################################
 
 GPU_ADDR=$(lspci | grep "GA102" | grep -i "VGA" | awk '{print $1}')
@@ -76,8 +75,7 @@ VFIO_MODPROBE="/etc/modprobe.d/vfio.conf"
 echo
 echo "Writing $VFIO_MODPROBE ..."
 sudo tee "$VFIO_MODPROBE" > /dev/null << EOF
-# VFIO passthrough — bind RTX 3090 to vfio-pci instead of nvidia
-# IDs: $GPU_ID (GPU), ${AUDIO_ID:-n/a} (audio)
+# VFIO passthrough — bind secondary GPU to vfio-pci instead of nvidia
 options vfio-pci ids=$VFIO_IDS
 EOF
 tput setaf 2
