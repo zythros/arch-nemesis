@@ -107,14 +107,22 @@ fi
 # Set up VM clipboard sharing (uncomment for VMs)
 #bash "$installed_dir/870-vm-clipboard-setup.sh"
 
-# Configure NVIDIA Xorg driver + kernel modeset param (fixes SDDM not reaching login screen)
-if [ -f "$installed_dir/880-nvidia-xorg-setup.sh" ]; then
-    bash "$installed_dir/880-nvidia-xorg-setup.sh"
-fi
+# Host-only scripts — skip when running inside a VM
+if ! systemd-detect-virt -q --vm; then
+    # Configure NVIDIA Xorg driver + kernel modeset param (fixes SDDM not reaching login screen)
+    if [ -f "$installed_dir/880-nvidia-xorg-setup.sh" ]; then
+        bash "$installed_dir/880-nvidia-xorg-setup.sh"
+    fi
 
-# Configure VFIO passthrough for RTX 3090 (isolates it from nvidia driver for VM passthrough)
-if [ -f "$installed_dir/890-vfio-passthrough.sh" ]; then
-    bash "$installed_dir/890-vfio-passthrough.sh"
+    # Configure VFIO passthrough for RTX 3090 (isolates it from nvidia driver for VM passthrough)
+    if [ -f "$installed_dir/890-vfio-passthrough.sh" ]; then
+        bash "$installed_dir/890-vfio-passthrough.sh"
+    fi
+
+    # Install and configure virt-manager / QEMU-KVM (registers /mnt/vmssd storage pool)
+    if [ -f "$installed_dir/895-virt-manager-setup.sh" ]; then
+        bash "$installed_dir/895-virt-manager-setup.sh"
+    fi
 fi
 
 ##################################################################################################################################
