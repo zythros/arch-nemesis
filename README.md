@@ -1,5 +1,5 @@
 <h1 align="center">
- <img src="https://github.com/erikdubois/arcolinux-nemesis/blob/master/Personal/settings/arcolinuxw.png">
+ <img src="https://github.com/erikdubois/arcolinux-nemesis/blob/master/perrsonal/settings/arcolinuxw.png">
   <br />
    ArcoLinux Nemesis
 </h1>
@@ -56,17 +56,22 @@ Arch Linux based distros
 - [Area](https://ariser.eu)
 - [Ariser](https://ariser.eu)
 - [Artix](https://artixlinux.org/)
+- [BerserkerOS](https://berserkarch.xyz/)
 - [Big Linux](https://www.biglinux.com.br)
+- [BlendOS](https://blendos.co)
 - [Bluestar Linux](https://sourceforge.net/projects/bluestarlinux/)
 - [Cachyos](https://cachyos.org/)
 - [Carli](https://www.arcolinuxiso.com)
 - [Crystal Linux](https://getcryst.al/)
 - [EndeavourOS](https://endeavouros.com)
 - [Liya](https://sourceforge.net/projects/liya-2024/)
+- [LinuxHub Prime](https://linuxhub.link/)
 - [Mabox](https://maboxlinux.org/)
 - [Manjaro](https://manjaro.org)
+- [Nyarch](https://nyarchlinux.moe/)
 - [Omarchy](https://omarchy.org)
 - [Parchlinux](https://parchlinux.com/)
+- [PrismLinux](https://www.prismlinux.org/)
 - [RebornOS](https://rebornos.org)
 - [Sierra](https://ariser.eu)
 - [StormOS](https://sourceforge.net/projects/hackman-linux/)
@@ -119,27 +124,27 @@ These scripts can be used with various window managers and desktop environments.
 E.g.: awesome, i3, leftwm, qtile, ...
 
 <p align="center">
-  <img src="Personal/settings/desktop-images/awesome.png" alt="AwesomeWM" width="600"/>
+  <img src="personal/settings/desktop-images/awesome.png" alt="AwesomeWM" width="600"/>
 </p>
 
 <p align="center">
-  <img src="Personal/settings/desktop-images/i3.png" alt="i3WM" width="600"/>
+  <img src="personal/settings/desktop-images/i3.png" alt="i3WM" width="600"/>
 </p>
 
 <p align="center">
-  <img src="Personal/settings/desktop-images/leftwm.png" alt="LeftWM" width="600"/>
+  <img src="personal/settings/desktop-images/leftwm.png" alt="LeftWM" width="600"/>
 </p>
 
 <p align="center">
-  <img src="Personal/settings/desktop-images/qtile.png" alt="Qtile" width="600"/>
+  <img src="personal/settings/desktop-images/qtile.png" alt="Qtile" width="600"/>
 </p>
 
 <p align="center">
-  <img src="Personal/settings/desktop-images/install.png" alt="Install Process" width="600"/>
+  <img src="personal/settings/desktop-images/install.png" alt="Install Process" width="600"/>
 </p>
 
 <p align="center">
-  <img src="Personal/settings/desktop-images/desktops.png" alt="Desktops" width="600"/>
+  <img src="personal/settings/desktop-images/desktops.png" alt="Desktops" width="600"/>
 </p>
 
 # Social Media
@@ -149,3 +154,110 @@ Youtube  : https://www.youtube.com/erikdubois
 Github : https://github.com/erikdubois
 
 Website : https://erikdubois.be
+
+
+
+
+# ArcoLinux Nemesis Series
+
+Distributions that have been checked
+
+1. Arch Linux (every release)
+2. Kiro Linux (every release)
+3. CachyOS - cachyos-desktop-linux-2603.08.iso
+4. Omarchy - omarchy-3.4.2-2.iso
+5. EndeavourOS - EndeavourOS_Titan-2026.03.06.iso
+
+Rest will gradually follow and will probably work with improved code...
+
+The **ArcoLinux Nemesis series** on YouTube  
+[Watch the playlist](https://www.youtube.com/playlist?list=PLlloYVGq5pS7bFIboMzh6qfUNvvpDVZaU)  
+is a technical video collection focused on building, customizing, and experimenting with Arch-based Linux systems using the ArcoLinux ecosystem.
+---
+
+## Overview
+
+The series is a structured set of tutorials and experiments where you learn how to:
+
+- Build Linux systems using automation scripts  
+- Customize and optimize your setup  
+- Explore different Arch-based workflows as well as Debian and others
+- Improve and adapt installation processes  
+
+The core philosophy is simple: **learn Linux by doing**.
+
+---
+
+## What is “Nemesis”?
+
+“Nemesis” is not a standalone distribution. It is a **collection of scripts and methodologies** that allow you to:
+
+- Install Arch Linux in a flexible way  
+- Recreate ArcoLinux setups from scratch  
+- Automate configuration and system setup  
+
+Think of it as a **DIY toolkit** for building your own Linux system.
+
+---
+
+## Key Topics Covered
+
+### Script-Driven Installations
+
+Instead of manual Arch installation, Nemesis uses scripts to:
+
+- Speed up the installation process  
+- Ensure consistency  
+- Make setups reproducible  
+
+---
+
+### System Customization (Ricing)
+
+A strong focus is placed on personalization:
+
+- Window managers (Chadwm, i3, etc.)  
+- Themes and icons  
+- Workflow optimization  
+
+---
+
+### Cross-Distribution Experimentation
+
+The series also explores:
+
+- Other Arch-based distributions  
+- Other Debian-base distributions  
+- Other Linux distributions (nixos, solus, ...)  
+
+---
+
+### Continuous Improvement
+
+Nemesis evolves over time:
+
+- Scripts are updated regularly  
+- Techniques are refined  
+- Users are encouraged to experiment and adapt  
+
+---
+
+## Target Audience
+
+This series is ideal for:
+
+- Intermediate to advanced Linux users  
+- Arch Linux learners seeking deeper understanding  
+- Developers interested in automation  
+- Users who enjoy full system control  
+
+Beginners can follow along, but basic Linux knowledge is recommended.
+
+---
+
+## Why This Series is Valuable
+
+- **Hands-on learning** – real system building, not theory  
+- **Reproducibility** – repeat setups using scripts  
+- **Flexibility** – full control over your system  
+- **Deep understanding** – insight into the ArcoLinux ecosystem  

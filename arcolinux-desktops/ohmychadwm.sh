@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+##################################################################################################################################
+# Author    : Erik Dubois
+# Website   : https://www.erikdubois.be
+# Youtube   : https://youtube.com/erikdubois
+##################################################################################################################################
+#
+#   DO NOT JUST RUN THIS. EXAMINE AND JUDGE. RUN AT YOUR OWN RISK.
+#
+##################################################################################################################################
+
+set -Euo pipefail
+shopt -s nullglob
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+COMMON_DIR="$(cd -- "${SCRIPT_DIR}/../common" && pwd)"
+
+source "${COMMON_DIR}/common.sh"
+
+echo
+tput setaf 2
+echo "########################################################################"
+echo "################### Install Chadwm"
+echo "########################################################################"
+tput sgr0
+echo
+
+
+list=(
+alacritty
+archlinux-logout-git
+ohmychadwm-git
+edu-xfce-git
+dmenu
+fastcompmgr-git
+feh
+gcc
+gvfs
+lolcat
+lxappearance
+make
+picom-git
+polkit-gnome
+rofi
+sxhkd
+thunar
+thunar-archive-plugin
+thunar-volman
+ttf-hack
+ttf-font-awesome
+ttf-jetbrains-mono-nerd
+volctl
+xfce4-notifyd
+xfce4-power-manager
+xfce4-screenshooter
+xfce4-settings
+xfce4-taskmanager
+xfce4-terminal
+xorg-xsetroot
+)
+
+count=0
+
+for name in "${list[@]}" ; do
+    count=$[count+1]
+    tput setaf 3;echo "Installing package nr.  "$count " " $name;tput sgr0;
+    install_packages $name
+done
+
+echo
+tput setaf 3
+echo "########################################################################"
+echo "SKEL"
+echo "Copying all files and folders from /etc/skel/ to ~"
+echo "########################################################################"
+tput sgr0
+echo
+
+cp -af /etc/skel/.config/arco-chadwm ~/.config/
+cp -af /etc/skel/.bin ~
+
+echo
+tput setaf 6
+echo "##############################################################"
+echo "###################  $(basename $0) done"
+echo "##############################################################"
+tput sgr0
+echo
